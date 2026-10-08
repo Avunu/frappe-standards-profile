@@ -1,0 +1,369 @@
+{
+  "profile": {
+    "name": "avunu",
+    "source": "github:Avunu/frappe-standards-profile/v1",
+    "rev": ""
+  },
+  "modules": {
+    "dev-shell": true,
+    "editorconfig": true,
+    "metadata": true,
+    "python-lint": true,
+    "ssort": true,
+    "python-types": true,
+    "js": true,
+    "typescript": true,
+    "stylelint": true,
+    "tests": true,
+    "semgrep": true,
+    "workflow-lint": true,
+    "shell-lint": true,
+    "nix-lint": true,
+    "hygiene": true,
+    "commits": true,
+    "releases": true,
+    "dependabot": true,
+    "ci": true,
+    "repo-policy": true,
+    "vite-register": true,
+    "pilot-assets": false,
+    "listing": true,
+    "readme": true,
+    "icons": true,
+    "screenshots": true,
+    "demo": true,
+    "test-utils": true,
+    "docs-site": true
+  },
+  "config": {
+    "org": {
+      "publisher": "Avunu LLC",
+      "email": "mail@avu.nu",
+      "copyright-holder": "Avunu LLC",
+      "license": "MIT",
+      "github-owner": "Avunu",
+      "website-url": "https://avunu.net/open-source/{app}/",
+      "docs-url": "https://{app_hyphen}.avunu.net/",
+      "dev-docs-url": "https://frappe-nix.avunu.net/docs/app-standards/",
+      "support-url": "",
+      "repo-url": "https://github.com/{repo}",
+      "brand": {
+        "tile-color": "#834AFF",
+        "glyph-color": "#FFFFFF",
+        "palette": {}
+      },
+      "readme": {
+        "badges": [],
+        "links": []
+      }
+    },
+    "dev-shell": {
+      "enable": true,
+      "systems": [
+        "x86_64-linux",
+        "aarch64-linux",
+        "aarch64-darwin",
+        "x86_64-darwin"
+      ],
+      "extra-substituters": [],
+      "extra-trusted-public-keys": [],
+      "frappe-nix-url": ""
+    },
+    "editorconfig": {
+      "enable": true,
+      "indent": "tab",
+      "line-length": 110
+    },
+    "metadata": {
+      "enable": true,
+      "build-backend": "flit",
+      "package-type": "module",
+      "package-manager": "yarn@1.22.22",
+      "node-engine": ">=24"
+    },
+    "python-lint": {
+      "enable": true,
+      "tool": "ruff",
+      "select": [
+        "F",
+        "E",
+        "W",
+        "I",
+        "UP",
+        "B",
+        "RUF",
+        "SIM",
+        "C4",
+        "PIE",
+        "PERF",
+        "T20"
+      ],
+      "ignore": [
+        "E501",
+        "W191"
+      ],
+      "line-length": 110,
+      "indent-style": "tab",
+      "quote-style": "double",
+      "typing-modules": [
+        "frappe.types.DF"
+      ]
+    },
+    "ssort": {
+      "enable": true
+    },
+    "python-types": {
+      "enable": true,
+      "tool": "ty",
+      "error-on-warning": true
+    },
+    "js": {
+      "enable": true,
+      "tool": "oxc",
+      "locked-rules": true,
+      "format-width": 110,
+      "format-tabs": true,
+      "oxlint": {
+        "categories": {
+          "correctness": "error",
+          "suspicious": "error",
+          "perf": "warn",
+          "pedantic": "off"
+        },
+        "ignore": [],
+        "globals": {},
+        "overrides": []
+      },
+      "oxfmt": {
+        "ignore": []
+      }
+    },
+    "typescript": {
+      "enable": true,
+      "preset": "frappe-types",
+      "strict-extras": true,
+      "check-js": true,
+      "audit-consumer": false,
+      "browser": true,
+      "browser-include": [],
+      "web-include": [],
+      "paths": {},
+      "exclude": [],
+      "spa": []
+    },
+    "stylelint": {
+      "enable": true,
+      "globs": []
+    },
+    "tests": {
+      "enable": true,
+      "testmap": true,
+      "composition": true,
+      "js-unit": true,
+      "js-coverage-min": 50,
+      "coverage": {
+        "enable": true,
+        "target": 80,
+        "raise-margin": 2.0,
+        "initial-floor": 0
+      },
+      "setup": []
+    },
+    "semgrep": {
+      "enable": true,
+      "frappe-rules": true,
+      "test-correctness": true
+    },
+    "workflow-lint": {
+      "enable": true
+    },
+    "shell-lint": {
+      "enable": true
+    },
+    "nix-lint": {
+      "enable": true
+    },
+    "hygiene": {
+      "enable": true,
+      "max-file-kb": 1024
+    },
+    "commits": {
+      "enable": true,
+      "tool": "committed",
+      "allowed-types": [
+        "build",
+        "chore",
+        "ci",
+        "docs",
+        "feat",
+        "fix",
+        "perf",
+        "refactor",
+        "revert",
+        "style",
+        "test",
+        "deprecate"
+      ],
+      "subject-length": 100,
+      "allow-stacked": false,
+      "pr-allowed-bases": []
+    },
+    "releases": {
+      "enable": true,
+      "tool": "release-please",
+      "branching": "develop+version",
+      "version-scheme": "frappe-major",
+      "tag-prefix": "v"
+    },
+    "dependabot": {
+      "enable": true,
+      "cadence": "daily",
+      "cadence-overrides": {
+        "uv": "weekly",
+        "pre-commit": "weekly",
+        "nix": "weekly",
+        "gitsubmodule": "weekly"
+      },
+      "cooldown-days": 3,
+      "auto-merge": true,
+      "ecosystems": {
+        "github-actions": true,
+        "npm": true,
+        "uv": true,
+        "pre-commit": true,
+        "nix": true,
+        "gitsubmodule": true
+      }
+    },
+    "ci": {
+      "enable": true,
+      "provider": "github",
+      "nightly": true,
+      "test-timeout-minutes": 75,
+      "schedules": {
+        "ci": "0 6 * * *",
+        "release": "30 5 * * *",
+        "deps-sweep": "0 9 * * *",
+        "deps-relock": "0 8 * * 1",
+        "nightly": "0 7 * * *"
+      }
+    },
+    "repo-policy": {
+      "enable": true,
+      "required-approvals": 0,
+      "require-code-owner-review": false,
+      "required-checks": "gates",
+      "release-bypass": "github-actions",
+      "secret-scanning": true,
+      "merge-methods": [
+        "squash"
+      ],
+      "require-thread-resolution": true,
+      "delete-branch-on-merge": true,
+      "manage-default-branch": true,
+      "manage-features": true
+    },
+    "vite-register": {
+      "enable": true
+    },
+    "pilot-assets": {
+      "enable": false
+    },
+    "listing": {
+      "enable": true,
+      "publish": true,
+      "registry-upstream": "frappe/marketplace",
+      "registry-fork": "Avunu/marketplace",
+      "getapp-check": true
+    },
+    "readme": {
+      "enable": true,
+      "install-ref": ""
+    },
+    "icons": {
+      "enable": true
+    },
+    "screenshots": {
+      "enable": true,
+      "timezone": "America/New_York",
+      "locale": "en-US"
+    },
+    "demo": {
+      "enable": true,
+      "company-name": "Avunu Demo",
+      "company-abbr": "AD",
+      "country": "United States",
+      "currency": "USD",
+      "timezone": "America/New_York",
+      "language": "English",
+      "date": "2026-01-15",
+      "seed": 1,
+      "erpnext-demo": false
+    },
+    "test-utils": {
+      "enable": true,
+      "hooks": [
+        "validate_frappe_project",
+        "validate_patches",
+        "static_analysis",
+        "validate_doctype_python_types",
+        "validate_copyright",
+        "validate_customizations",
+        "clean_customized_doctypes",
+        "check_code_duplication"
+      ],
+      "track-overrides": false
+    },
+    "docs-site": {
+      "enable": true,
+      "action-patterns": [
+        "Avunu/docusystem*"
+      ],
+      "cooldown-exclude-actions": [
+        "Avunu/docusystem"
+      ],
+      "package-names": [
+        "@avunu/docusystem"
+      ]
+    },
+    "retire": [
+      {
+        "paths": [
+          ".github/workflows/check.yml",
+          ".github/workflows/version-branch-guard.yml"
+        ],
+        "module": "ci"
+      }
+    ],
+    "replace-apps": [
+      {
+        "from": "jailbreak",
+        "to": "data_steward"
+      }
+    ],
+    "profile": "github:Avunu/frappe-standards-profile/v1",
+    "frappe-major": 16,
+    "siblings": [],
+    "untested": [
+      {
+        "target": "standards_fixture.api.legacy",
+        "reason": "Deliberately untested: the testmap exemption the self-tests exercise"
+      }
+    ],
+    "schema": 1,
+    "extra-files": [],
+    "known-apps": {},
+    "retire-keep": [],
+    "nightly-suites": [],
+    "generated": [],
+    "build": false,
+    "shell-checks": [],
+    "frappe-node-modules": false,
+    "coverage-omit": [],
+    "unchecked-js": [],
+    "override-doctype-class": [],
+    "integration-branch": "develop",
+    "site": "standards-fixture.localhost",
+    "repo": "Avunu/standards_fixture"
+  }
+}
