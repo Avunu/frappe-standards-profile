@@ -1,0 +1,26 @@
+# Dependabot moves the two pins this repository has: the frappe-nix the validate workflow
+# runs (flake.lock) and the actions' SHAs. Both land through a PR that the validate check
+# gates; a frappe-nix bump that changes a resolved value fails until resolved.snapshot.json
+# is updated on purpose.
+version: 2
+updates:
+  - package-ecosystem: nix
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: chore(deps)
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: chore(deps)
+    groups:
+      actions:
+        patterns: ["*"]
