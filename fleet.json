@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "profile": "github:Avunu/frappe-standards-profile/v1",
+  "apps": [
+    {
+      "repo": "Avunu/automated_subscriptions",
+      "app": "automated_subscriptions",
+      "private": false,
+      "list": true,
+      "documentation": "https://automated-subscriptions.avunu.net/"
+    },
+    {
+      "repo": "Avunu/carbon_frappe",
+      "app": "carbon_frappe",
+      "target_app": "carbon_theme",
+      "private": false,
+      "list": true,
+      "documentation": "https://carbon-theme.avunu.net/"
+    },
+    {
+      "repo": "Avunu/cloudflare_email_delivery",
+      "app": "cloudflare_email_delivery",
+      "private": false,
+      "list": true,
+      "documentation": "https://cloudflare-email-delivery.avunu.net/"
+    },
+    {
+      "repo": "Avunu/data_steward",
+      "app": "jailbreak",
+      "target_app": "data_steward",
+      "rename_mode": "replace",
+      "private": false,
+      "list": true,
+      "documentation": "https://data-steward.avunu.net/"
+    },
+    {
+      "repo": "Avunu/erpnext_cis_plus",
+      "app": "erpnext_cis_plus",
+      "private": false,
+      "list": true,
+      "documentation": "https://erpnext-cis-plus.avunu.net/"
+    },
+    {
+      "repo": "Avunu/erpnext_taskview",
+      "app": "erpnext_taskview",
+      "private": false,
+      "list": true,
+      "documentation": "https://erpnext-taskview.avunu.net/"
+    },
+    {
+      "repo": "Avunu/esign_webforms",
+      "app": "esign",
+      "target_app": "esign_webforms",
+      "private": false,
+      "list": true,
+      "documentation": "https://esign-webforms.avunu.net/"
+    },
+    {
+      "repo": "Avunu/frappe_editor",
+      "app": "frappe_editor",
+      "target_app": "ui_text_editor",
+      "private": false,
+      "list": true,
+      "documentation": "https://ui-text-editor.avunu.net/"
+    },
+    {
+      "repo": "Avunu/jwt_auth",
+      "app": "jwt_auth",
+      "target_app": "jwt_bearer_auth",
+      "private": false,
+      "list": true,
+      "documentation": "https://jwt-bearer-auth.avunu.net/"
+    },
+    {
+      "repo": "Avunu/mercury_integration",
+      "app": "mercury_integration",
+      "target_app": "mercury_banking_integration",
+      "private": false,
+      "list": true,
+      "documentation": "https://mercury-banking-integration.avunu.net/"
+    },
+    {
+      "repo": "Avunu/postgrid_integration",
+      "app": "postgrid_integration",
+      "target_app": "postgrid_direct_mail",
+      "private": false,
+      "list": true,
+      "documentation": "https://postgrid-direct-mail.avunu.net/"
+    },
+    {
+      "repo": "Avunu/timeclock",
+      "app": "timeclock",
+      "target_app": "employee_timeclock",
+      "private": true,
+      "list": true,
+      "documentation": "https://employee-timeclock.avunu.net/"
+    }
+  ]
+}
