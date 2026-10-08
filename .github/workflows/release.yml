@@ -1,0 +1,72 @@
+name: release
+
+# Releases of this profile (spec §6.4): release-please keeps a release PR open on main; when
+# it merges, release-please tags vX.Y.Z and this workflow fast-forwards the moving branch
+# v<major> (v1) to the tag commit with a REST PATCH (force=false), as frappe-nix moves
+# release-1. Apps lock `github:Avunu/frappe-standards-profile/v1`, so v1 only ever moves to
+# a release, and a release reaches an app only through a reviewed
+# `frappe-nix repo rollout --profile-to` PR (S38).
+#
+# The release PR is opened with GITHUB_TOKEN, which starts no workflow, so this workflow
+# dispatches validate.yml on its branch; the `validate` check then appears on the PR.
+#
+# Repository settings this needs (repo-policy/repo-settings.json): Actions may create pull
+# requests, and the v* ruleset lets GitHub Actions (integration 15368) update v*.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: write # dispatch validate.yml on the release PR
+      contents: write # tags, releases and the v<major> fast-forward
+      pull-requests: write # the release PR
+    steps:
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        id: rp
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - name: Run validate on the release PR
+        if: steps.rp.outputs.prs_created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ steps.rp.outputs.pr }}
+        run: |
+          set -euo pipefail
+          branch="$(jq -r '.headBranchName' <<< "$PR")"
+          gh workflow run validate.yml --repo "$GITHUB_REPOSITORY" --ref "$branch"
+
+      - name: Fast-forward v<major> to the release
+        if: steps.rp.outputs.release_created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.rp.outputs.tag_name }}
+          SHA: ${{ steps.rp.outputs.sha }}
+        run: |
+          set -euo pipefail
+          [[ "$TAG" =~ ^v([0-9]+)\.[0-9]+\.[0-9]+$ ]] || { echo "::error::unexpected tag $TAG"; exit 1; }
+          branch="v${BASH_REMATCH[1]}"
+          # The tag must name the commit release-please reported.
+          tagged="$(gh api "repos/$GITHUB_REPOSITORY/commits/$TAG" --jq .sha)"
+          [ "$tagged" = "$SHA" ] || { echo "::error::$TAG is $tagged, not $SHA"; exit 1; }
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$branch" > /dev/null 2>&1; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/git/refs/heads/$branch" -f sha="$SHA" -F force=false > /dev/null
+          else
+            gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/heads/$branch" -f sha="$SHA" > /dev/null
+          fi
+          now="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$branch" --jq .object.sha)"
+          [ "$now" = "$SHA" ] || { echo "::error::$branch is $now after the update, not $SHA"; exit 1; }
+          echo "$branch -> $TAG ($SHA)"
