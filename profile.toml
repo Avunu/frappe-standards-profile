@@ -1,0 +1,224 @@
+# Avunu's app-standards profile for frappe-nix (https://github.com/Avunu/frappe-nix).
+#
+# Apps select it with `profile = "github:Avunu/frappe-standards-profile/v1"` in their
+# [tool.frappe-nix] table. The format is frappe-nix's profile schema 1; section numbers
+# below (§…) refer to frappe-nix's docs/app-standards/spec.md. Every value the fleet relies
+# on is set explicitly, so a frappe-nix release that changes `recommended` can't move an
+# Avunu app (resolved.snapshot.json and the validate workflow prove it).
+
+schema = 1
+name = "avunu"
+description = "Avunu's app standards: every gate on, Frappe-major versioning, develop + version-<major>, Marketplace publishing."
+extends = "recommended@1.0"
+requires-frappe-nix = ">=1.0,<2"
+
+[org]
+publisher = "Avunu LLC"
+email = "mail@avu.nu"
+copyright-holder = "Avunu LLC"
+license = "MIT"
+github-owner = "Avunu"
+website-url = "https://avunu.net/open-source/{app}/"
+docs-url = "https://{app_hyphen}.avunu.net/"
+dev-docs-url = "https://frappe-nix.avunu.net/docs/app-standards/"
+repo-url = "https://github.com/{repo}"
+
+[org.brand]
+tile-color = "#834AFF"
+glyph-color = "#FFFFFF"
+
+[editorconfig]
+enable = true
+indent = "tab"
+line-length = 110
+
+[metadata]
+enable = true
+build-backend = "flit"
+package-type = "module"
+package-manager = "yarn@1.22.22"
+node-engine = ">=24"
+
+[python-lint]
+enable = true
+tool = "ruff"
+select = ["F", "E", "W", "I", "UP", "B", "RUF", "SIM", "C4", "PIE", "PERF", "T20"]
+ignore = ["E501", "W191"]
+line-length = 110
+indent-style = "tab"
+quote-style = "double"
+typing-modules = ["frappe.types.DF"]
+
+[ssort]
+enable = true
+
+[python-types]
+enable = true
+tool = "ty"
+error-on-warning = true
+
+[js]
+enable = true
+tool = "oxc"
+locked-rules = true
+format-width = 110
+format-tabs = true
+
+[js.oxlint.categories]
+correctness = "error"
+suspicious = "error"
+perf = "warn"
+pedantic = "off"
+
+[typescript]
+enable = true
+preset = "frappe-types"
+strict-extras = true
+check-js = true
+audit-consumer = false
+
+[stylelint]
+enable = true
+
+[tests]
+enable = true
+testmap = true
+composition = true
+js-unit = true
+js-coverage-min = 50
+
+[tests.coverage]
+enable = true
+target = 80
+raise-margin = 2.0
+initial-floor = 0
+
+[semgrep]
+enable = true
+frappe-rules = true
+test-correctness = true
+
+[workflow-lint]
+enable = true
+
+[shell-lint]
+enable = true
+
+[nix-lint]
+enable = true
+
+[hygiene]
+enable = true
+max-file-kb = 1024
+
+[commits]
+enable = true
+tool = "committed"
+allowed-types = ["build", "chore", "ci", "docs", "feat", "fix", "perf", "refactor", "revert", "style", "test", "deprecate"]
+subject-length = 100
+allow-stacked = false                       # plan §5: every PR targets develop, no stacked PRs
+pr-allowed-bases = []
+
+[releases]
+enable = true
+tool = "release-please"
+branching = "develop+version"
+version-scheme = "frappe-major"
+tag-prefix = "v"
+
+[dependabot]
+enable = true
+cadence = "daily"
+cadence-overrides = { uv = "weekly", pre-commit = "weekly", nix = "weekly", gitsubmodule = "weekly" }
+cooldown-days = 3
+auto-merge = true
+
+[dependabot.ecosystems]
+github-actions = true
+npm = true
+uv = true
+pre-commit = true
+nix = true
+gitsubmodule = true
+
+[ci]
+enable = true
+nightly = true
+test-timeout-minutes = 75
+
+[ci.schedules]
+ci = "0 6 * * *"
+release = "30 5 * * *"
+deps-sweep = "0 9 * * *"
+deps-relock = "0 8 * * 1"
+nightly = "0 7 * * *"
+
+[repo-policy]
+enable = true
+required-approvals = 0
+require-code-owner-review = false
+required-checks = "gates"
+release-bypass = "github-actions"
+secret-scanning = true
+merge-methods = ["squash"]
+require-thread-resolution = true
+delete-branch-on-merge = true
+manage-default-branch = true
+manage-features = true
+
+[vite-register]
+enable = true
+
+[pilot-assets]
+enable = false                              # apps with prebuilt assets turn it on
+
+[listing]
+enable = true                               # registry readiness for every app, listed or not
+publish = true
+registry-upstream = "frappe/marketplace"
+registry-fork = "Avunu/marketplace"
+getapp-check = true
+
+[readme]
+enable = true
+install-ref = ""
+
+[icons]
+enable = true
+
+[screenshots]
+enable = true
+timezone = "America/New_York"
+locale = "en-US"
+
+[demo]
+enable = true
+company-name = "Avunu Demo"
+company-abbr = "AD"
+country = "United States"
+currency = "USD"
+timezone = "America/New_York"
+language = "English"
+date = "2026-01-15"
+seed = 1
+erpnext-demo = false
+
+[test-utils]
+enable = true
+hooks = ["validate_frappe_project", "validate_patches", "static_analysis", "validate_doctype_python_types",
+         "validate_copyright", "validate_customizations", "clean_customized_doctypes", "check_code_duplication"]
+track-overrides = false
+
+[docs-site]
+enable = true
+action-patterns = ["Avunu/docusystem*"]     # the docs-actions group and its needs-review rule
+cooldown-exclude-actions = ["Avunu/docusystem"]   # exact name, as `docusystem doctor` checks it
+package-names = ["@avunu/docusystem"]
+
+[[retire]]                                  # the fleet's old workflows whose jobs moved to ci.yml (§2.4.1)
+paths = [".github/workflows/check.yml", ".github/workflows/version-branch-guard.yml"]
+module = "ci"
+
+[[replace-apps]]                            # A.2: data_steward replaces jailbreak (§5.10)
+from = "jailbreak"
+to = "data_steward"
