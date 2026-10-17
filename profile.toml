@@ -10,7 +10,7 @@ schema = 1
 name = "avunu"
 description = "Avunu's app standards: every gate on, Frappe-major versioning, develop + version-<major>, Marketplace publishing."
 extends = "recommended@1.0"
-requires-frappe-nix = ">=1.0,<2"
+requires-frappe-nix = ">=0.0,<2"  # raise to >=1.0 once frappe-nix tags v1.0.0
 
 [org]
 publisher = "Avunu LLC"

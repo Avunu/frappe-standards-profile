@@ -17,7 +17,7 @@
 #   FRAPPE_NIX_SRC  the matching frappe-nix source tree (default: the one flake.lock pins)
 #
 # Before frappe-nix v1.0.0 exists, the pinned frappe-nix-tools reports 0.0.0, which
-# `requires-frappe-nix = ">=1.0,<2"` excludes (exit 3). Against such an unreleased build
+# a `requires-frappe-nix` floor of 1.0 would exclude (exit 3). Against such an unreleased build
 # the checks run on a copy without that one line, with a warning; against any release the
 # file is checked exactly as committed.
 set -euo pipefail
