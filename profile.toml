@@ -19,8 +19,8 @@ copyright-holder = "Avunu LLC"
 license = "MIT"
 github-owner = "Avunu"
 website-url = "https://avunu.net/open-source/{app}/"
-docs-url = "https://{app_hyphen}.avunu.net/"
-dev-docs-url = "https://frappe-nix.avunu.net/docs/app-standards/"
+docs-url = "https://docs.avunu.net/{app_hyphen}/"
+dev-docs-url = "https://docs.avunu.net/frappe-nix/docs/app-standards/"
 repo-url = "https://github.com/{repo}"
 
 [org.brand]
@@ -210,10 +210,7 @@ hooks = ["validate_frappe_project", "validate_patches", "static_analysis", "vali
 track-overrides = false
 
 [docs-site]
-enable = true
-action-patterns = ["Avunu/docusystem*"]     # the docs-actions group and its needs-review rule
-cooldown-exclude-actions = ["Avunu/docusystem"]   # exact name, as `docusystem doctor` checks it
-package-names = ["@avunu/docusystem"]
+enable = false                              # the documentation is built by Avunu/site-docs, not from a docs-site/ in each app
 
 [[retire]]                                  # the fleet's old workflows whose jobs moved to ci.yml (§2.4.1)
 paths = [".github/workflows/check.yml", ".github/workflows/version-branch-guard.yml"]

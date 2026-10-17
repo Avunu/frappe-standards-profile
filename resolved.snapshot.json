@@ -33,7 +33,7 @@
     "screenshots": true,
     "demo": true,
     "test-utils": true,
-    "docs-site": true
+    "docs-site": false
   },
   "config": {
     "org": {
@@ -43,8 +43,8 @@
       "license": "MIT",
       "github-owner": "Avunu",
       "website-url": "https://avunu.net/open-source/{app}/",
-      "docs-url": "https://{app_hyphen}.avunu.net/",
-      "dev-docs-url": "https://frappe-nix.avunu.net/docs/app-standards/",
+      "docs-url": "https://docs.avunu.net/{app_hyphen}/",
+      "dev-docs-url": "https://docs.avunu.net/frappe-nix/docs/app-standards/",
       "support-url": "",
       "repo-url": "https://github.com/{repo}",
       "brand": {
@@ -315,16 +315,10 @@
       "track-overrides": false
     },
     "docs-site": {
-      "enable": true,
-      "action-patterns": [
-        "Avunu/docusystem*"
-      ],
-      "cooldown-exclude-actions": [
-        "Avunu/docusystem"
-      ],
-      "package-names": [
-        "@avunu/docusystem"
-      ]
+      "enable": false,
+      "action-patterns": [],
+      "cooldown-exclude-actions": [],
+      "package-names": []
     },
     "retire": [
       {
