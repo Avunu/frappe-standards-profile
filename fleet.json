@@ -10,7 +10,7 @@
       "documentation": "https://docs.avunu.net/automated-subscriptions/"
     },
     {
-      "repo": "Avunu/carbon_frappe",
+      "repo": "Avunu/carbon_theme",
       "app": "carbon_frappe",
       "target_app": "carbon_theme",
       "private": false,
@@ -56,7 +56,7 @@
       "documentation": "https://docs.avunu.net/esign-webforms/"
     },
     {
-      "repo": "Avunu/frappe_editor",
+      "repo": "Avunu/ui_text_editor",
       "app": "frappe_editor",
       "target_app": "ui_text_editor",
       "private": false,
@@ -64,7 +64,7 @@
       "documentation": "https://docs.avunu.net/ui-text-editor/"
     },
     {
-      "repo": "Avunu/jwt_auth",
+      "repo": "Avunu/jwt_bearer_auth",
       "app": "jwt_auth",
       "target_app": "jwt_bearer_auth",
       "private": false,
@@ -72,7 +72,7 @@
       "documentation": "https://docs.avunu.net/jwt-bearer-auth/"
     },
     {
-      "repo": "Avunu/mercury_integration",
+      "repo": "Avunu/mercury_banking_integration",
       "app": "mercury_integration",
       "target_app": "mercury_banking_integration",
       "private": false,
@@ -80,7 +80,7 @@
       "documentation": "https://docs.avunu.net/mercury-banking-integration/"
     },
     {
-      "repo": "Avunu/postgrid_integration",
+      "repo": "Avunu/postgrid_direct_mail",
       "app": "postgrid_integration",
       "target_app": "postgrid_direct_mail",
       "private": false,
