@@ -62,8 +62,7 @@
       "systems": [
         "x86_64-linux",
         "aarch64-linux",
-        "aarch64-darwin",
-        "x86_64-darwin"
+        "aarch64-darwin"
       ],
       "extra-substituters": [],
       "extra-trusted-public-keys": [],
@@ -167,7 +166,8 @@
         "raise-margin": 2.0,
         "initial-floor": 0
       },
-      "setup": []
+      "setup": [],
+      "devguard-disable": []
     },
     "semgrep": {
       "enable": true,
