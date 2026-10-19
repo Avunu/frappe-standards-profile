@@ -6,12 +6,10 @@
   # frappe-nix whose `frappe-nix profile validate` and fixture app the CI uses, so every
   # validate run is reproducible and Dependabot's `nix` entry moves the pin in a PR.
   #
-  # Until frappe-nix v1.0.0 is tagged this follows frappe-nix's main; afterwards it pins
-  # the release named by profile.toml's `requires-frappe-nix` lower bound
-  # (github:Avunu/frappe-nix/v1.0.0), and the validate workflow's `latest` job covers the
-  # newest v1 release.
+  # It pins the release named by profile.toml's `requires-frappe-nix` lower bound, and the
+  # validate workflow's `latest` job covers the newest v1 release.
   inputs = {
-    frappe-nix.url = "github:Avunu/frappe-nix";
+    frappe-nix.url = "github:Avunu/frappe-nix/v1.0.0";
     nixpkgs.follows = "frappe-nix/nixpkgs";
   };
 
