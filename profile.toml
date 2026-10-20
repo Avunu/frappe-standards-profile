@@ -10,7 +10,7 @@ schema = 1
 name = "avunu"
 description = "Avunu's app standards: every gate on, Frappe-major versioning, develop + version-<major>, Marketplace publishing."
 extends = "recommended@1.0"
-requires-frappe-nix = ">=1.0,<2"
+requires-frappe-nix = ">=1.1,<2"
 
 [org]
 publisher = "Avunu LLC"
@@ -145,6 +145,9 @@ gitsubmodule = true
 enable = true
 nightly = true
 test-timeout-minutes = 75
+# The Linux jobs of frappe-nix's reusable workflows run on the fleet's self-hosted NixOS
+# runner (frappe-nix >= 1.1). Pull requests from forks still run on ubuntu-latest.
+runs-on = ["self-hosted", "nixos"]
 
 [ci.schedules]
 ci = "0 6 * * *"
