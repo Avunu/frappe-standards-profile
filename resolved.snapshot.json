@@ -246,7 +246,11 @@
         "deps-sweep": "0 9 * * *",
         "deps-relock": "0 8 * * 1",
         "nightly": "0 7 * * *"
-      }
+      },
+      "runs-on": [
+        "self-hosted",
+        "nixos"
+      ]
     },
     "repo-policy": {
       "enable": true,
