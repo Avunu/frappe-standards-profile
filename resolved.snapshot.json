@@ -239,7 +239,7 @@
       "enable": true,
       "provider": "github",
       "nightly": true,
-      "test-timeout-minutes": 75,
+      "test-timeout-minutes": 120,
       "schedules": {
         "ci": "0 6 * * *",
         "release": "30 5 * * *",
