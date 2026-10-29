@@ -9,8 +9,12 @@
 #      `sync --check`: every managed file renders with our values;
 #   4. fleet.json against the profile (scripts/check_fleet.py).
 #
-# Usage: scripts/check.sh [--update]
-#   --update  rewrite resolved.snapshot.json instead of comparing it
+# Usage: scripts/check.sh [--update | --additive]
+#   --update    rewrite resolved.snapshot.json instead of comparing it
+#   --additive  accept keys the snapshot doesn't have, other than a module that resolves on
+#               (scripts/compare_snapshot.py): every value it records must resolve the same.
+#               The validate workflow's `latest` job uses this, since a newer frappe-nix than
+#               the pinned one may add options.
 #
 # Environment:
 #   FRAPPE_NIX      the frappe-nix CLI to use (default: the one flake.lock pins, built with nix)
@@ -26,10 +30,12 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$root"
 
 update=0
+additive=0
 case "${1:-}" in
   --update) update=1 ;;
+  --additive) additive=1 ;;
   "") ;;
-  *) echo "usage: scripts/check.sh [--update]" >&2; exit 2 ;;
+  *) echo "usage: scripts/check.sh [--update | --additive]" >&2; exit 2 ;;
 esac
 
 work="$(mktemp -d)"
@@ -84,12 +90,18 @@ git -C "$work/app" add -A
 if [ "$update" = 1 ]; then
   cp "$work/resolved.json" resolved.snapshot.json
   echo "wrote resolved.snapshot.json"
-elif ! diff -u resolved.snapshot.json "$work/resolved.json"; then
+elif diff -u resolved.snapshot.json "$work/resolved.json"; then
+  echo "matches resolved.snapshot.json"
+elif [ "$additive" = 1 ]; then
+  python3 -I "$root/scripts/compare_snapshot.py" resolved.snapshot.json "$work/resolved.json" || {
+    echo "error: frappe-nix-tools $version changes the resolved configuration beyond added options (above)." >&2
+    echo "Taking this release means updating the profile or the snapshot with it on purpose." >&2
+    exit 1
+  }
+else
   echo "error: the resolved configuration differs from resolved.snapshot.json (diff above)." >&2
   echo "If the change is intended, run scripts/check.sh --update and commit the result." >&2
   exit 1
-else
-  echo "matches resolved.snapshot.json"
 fi
 
 echo "== offline sync of the fixture app"
