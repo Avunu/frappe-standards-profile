@@ -8,7 +8,10 @@ name: validate
 #             The `validate` check the main ruleset requires (repo-policy/rulesets/main.json).
 #   latest    the same checks against the newest frappe-nix v1 release, so a release that
 #             would change any of our values fails here before `frappe-nix repo rollout`
-#             takes it to the apps. Skipped, with a notice, until frappe-nix v1.0.0 exists.
+#             takes it to the apps. Options that release adds, which the snapshot of the
+#             pinned frappe-nix can't have, are notices, not failures, unless one is a
+#             module that resolves on (check.sh --additive).
+#             Skipped, with a notice, until frappe-nix v1.0.0 exists.
 #
 # The weekly schedule runs `latest` against new frappe-nix releases between our own changes.
 # release.yml dispatches this workflow on its release PR, which GITHUB_TOKEN opened.
@@ -108,4 +111,4 @@ jobs:
           ref="github:Avunu/frappe-nix/$TAG"
           nix build "$ref#frappe-nix" --out-link "$RUNNER_TEMP/frappe-nix"
           src="$(nix flake prefetch --json "$ref" | jq -r .storePath)"
-          FRAPPE_NIX="$RUNNER_TEMP/frappe-nix/bin/frappe-nix" FRAPPE_NIX_SRC="$src" scripts/check.sh
+          FRAPPE_NIX="$RUNNER_TEMP/frappe-nix/bin/frappe-nix" FRAPPE_NIX_SRC="$src" scripts/check.sh --additive
