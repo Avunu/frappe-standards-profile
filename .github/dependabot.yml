@@ -2,6 +2,9 @@
 # runs (flake.lock) and the actions' SHAs. Both land through a PR that the validate check
 # gates; a frappe-nix bump that changes a resolved value fails until resolved.snapshot.json
 # is updated on purpose.
+#
+# .github/workflows/dependabot-auto-merge.yml gives every one of these PRs auto-merge, so it
+# merges once `validate` passes, and keeps them up to date with main.
 version: 2
 updates:
   - package-ecosystem: nix
