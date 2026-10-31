@@ -1,0 +1,164 @@
+name: Dependabot auto-merge
+
+# This repository's own Dependabot pull requests (the frappe-nix pin and the actions' SHAs),
+# as frappe-nix's own dependabot-auto-merge.yml handles its:
+#
+#   auto-merge       every one gets auto-merge (squash): GitHub merges it once `validate`, the
+#                    check the main ruleset requires, passes. One that fails stays open, such
+#                    as a frappe-nix bump that moves a resolved value until
+#                    resolved.snapshot.json is updated on purpose.
+#   update-branches  after each push to main, and daily, every open Dependabot PR that is
+#                    behind main is brought up to date: `@dependabot rebase` while it has only
+#                    Dependabot's commits (once per head; after six hours unanswered, the
+#                    update-branch API instead), else the update-branch API. A PR that is not
+#                    behind is left alone. Release-please's PR is not Dependabot's, so it is
+#                    never touched.
+#
+# The org's "Avunu CI" GitHub App (the variable AVUNU_CI_APP_ID, or a Dependabot secret of that
+# name, and the secret AVUNU_CI_PRIVATE_KEY) enables the auto-merge and updates the branches,
+# so the merge raises a push that starts release.yml, validate.yml and update-branches, and an
+# updated branch starts its own validate run. Without it, GITHUB_TOKEN: the merge raises no
+# push, and validate.yml is dispatched on each updated branch.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  auto-merge:
+    # The PR's author, not github.actor (which a re-run by a person changes).
+    if: github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # gh pr merge --auto without the App
+      pull-requests: write # gh pr merge --auto without the App
+    steps:
+      # A Dependabot run sees only Dependabot secrets: the App's ID may be one too.
+      - id: app
+        name: Whether the repository can read the GitHub App
+        env:
+          ENABLED: ${{ (vars.AVUNU_CI_APP_ID || secrets.AVUNU_CI_APP_ID) != '' && secrets.AVUNU_CI_PRIVATE_KEY != '' }}
+        run: echo "enabled=$ENABLED" >> "$GITHUB_OUTPUT"
+
+      - if: steps.app.outputs.enabled == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.AVUNU_CI_APP_ID || secrets.AVUNU_CI_APP_ID }}
+          private-key: ${{ secrets.AVUNU_CI_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Enable auto-merge
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          set -euo pipefail
+          if [ "$(gh pr view "$PR_URL" --json autoMergeRequest --jq '.autoMergeRequest != null')" = true ]; then
+            echo "auto-merge is already enabled on $PR_URL"
+            exit 0
+          fi
+          gh pr merge --auto --squash "$PR_URL"
+
+  update-branches:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # One run at a time; a burst of merges leaves one run pending, which sees them all.
+    concurrency:
+      group: update-branches
+      cancel-in-progress: false
+    permissions:
+      contents: write # update-branch without the App
+      pull-requests: write # comment `@dependabot rebase`, update-branch
+      actions: write # without the App, dispatch validate.yml on the updated branch
+    steps:
+      - id: app
+        name: Whether the repository can read the GitHub App
+        env:
+          ENABLED: ${{ vars.AVUNU_CI_APP_ID != '' && secrets.AVUNU_CI_PRIVATE_KEY != '' }}
+        run: echo "enabled=$ENABLED" >> "$GITHUB_OUTPUT"
+
+      # A merge that brings .github/workflows/ changes in needs Workflows write: ask for it
+      # first and, from an App without it, fall back to Contents and Pull requests.
+      - if: steps.app.outputs.enabled == 'true'
+        id: app-token-workflows
+        continue-on-error: true
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.AVUNU_CI_APP_ID }}
+          private-key: ${{ secrets.AVUNU_CI_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
+
+      - if: steps.app.outputs.enabled == 'true' && steps.app-token-workflows.outcome != 'success'
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.AVUNU_CI_APP_ID }}
+          private-key: ${{ secrets.AVUNU_CI_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Bring Dependabot PRs that are behind main up to date
+        env:
+          GH_TOKEN: ${{ steps.app-token-workflows.outputs.token || steps.app-token.outputs.token || github.token }}
+          APP: ${{ steps.app-token-workflows.outputs.token != '' || steps.app-token.outputs.token != '' }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          now="$(date -u +%s)"
+          update() { # <number> <head sha> <head branch>
+            if ! gh api -X PUT "repos/$REPO/pulls/$1/update-branch" -f expected_head_sha="$2" > /dev/null; then
+              echo "::notice::#$1: could not update it from main (a conflict needs a person)"
+              return
+            fi
+            echo "#$1: merged main into $3"
+            if [ "$APP" != true ]; then
+              # A GITHUB_TOKEN update raises no event. Wait for the new head, then check it.
+              for _ in 1 2 3 4 5 6 7 8 9 10; do
+                sleep 3
+                if [ "$(gh api "repos/$REPO/pulls/$1" --jq .head.sha)" != "$2" ]; then
+                  gh workflow run validate.yml --repo "$REPO" --ref "$3"
+                  return
+                fi
+              done
+              echo "::notice::#$1: its new head did not appear yet; validate it by hand"
+            fi
+          }
+          gh pr list --repo "$REPO" --base main --state open --author app/dependabot \
+            --json number,headRefOid,headRefName --jq '.[] | "\(.number) \(.headRefOid) \(.headRefName)"' |
+            while read -r number sha branch; do
+              if [ "$(gh api "repos/$REPO/compare/main...$sha" --jq .behind_by)" = 0 ]; then
+                continue
+              fi
+              others="$(gh api --paginate "repos/$REPO/pulls/$number/commits" \
+                --jq '.[] | select(.author.login != "dependabot[bot]") | .sha')"
+              if [ -z "$others" ]; then
+                head_date="$(gh api --paginate "repos/$REPO/pulls/$number/commits" \
+                  --jq '.[].commit.committer.date' | tail -n 1)"
+                # ISO 8601 UTC times sort as text: the newest request made since the head commit.
+                asked="$(gh api --paginate "repos/$REPO/issues/$number/comments" \
+                  --jq '.[] | select(.body | contains("@dependabot rebase")) | .created_at' |
+                  awk -v after="$head_date" '$0 > after' | sort | tail -n 1)"
+                if [ -z "$asked" ]; then
+                  gh pr comment "$number" --repo "$REPO" --body "@dependabot rebase"
+                  echo "#$number: asked Dependabot to rebase it on main"
+                elif [ $((now - $(date -u -d "$asked" +%s))) -lt 21600 ]; then
+                  echo "#$number: Dependabot was asked to rebase it at $asked; waiting"
+                else
+                  echo "::notice::#$number: Dependabot has not rebased it since $asked; updating the branch instead"
+                  update "$number" "$sha" "$branch"
+                fi
+              else
+                update "$number" "$sha" "$branch"
+              fi
+            done
