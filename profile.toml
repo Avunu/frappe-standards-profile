@@ -10,8 +10,9 @@ schema = 1
 name = "avunu"
 description = "Avunu's app standards: every gate on, Frappe-major versioning, develop + version-<major>, Marketplace publishing."
 extends = "recommended@1.0"
-# 2.1 is the first frappe-nix that knows ci.github-app; an older one would refuse the key.
-requires-frappe-nix = ">=2.1,<3"
+# 2.2 is the first frappe-nix that knows dependabot.auto-merge-policy and update-branches (and
+# 2.1 ci.github-app); an older one would refuse the keys.
+requires-frappe-nix = ">=2.2,<3"
 
 [org]
 publisher = "Avunu LLC"
@@ -133,6 +134,12 @@ cadence = "daily"
 cadence-overrides = { uv = "weekly", pre-commit = "weekly", nix = "weekly", gitsubmodule = "weekly" }
 cooldown-days = 3
 auto-merge = true
+# Every Dependabot PR, majors included, and the nightly screenshots PR merge on their own once
+# the required checks pass (frappe-nix spec S44); one whose checks fail stays open.
+auto-merge-policy = "all"
+# After each push to develop, bot PRs that are behind it are brought up to date, so their
+# checks run against what they would merge into.
+update-branches = true
 
 [dependabot.ecosystems]
 github-actions = true
