@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/Avunu/frappe-standards-profile/compare/v1.0.0...v1.1.0) (2026-10-31)
+
+
+### Features
+
+* **profile:** accept frappe-nix 2.x and validate the newest allowed release ([#13](https://github.com/Avunu/frappe-standards-profile/issues/13)) ([9cfbfd7](https://github.com/Avunu/frappe-standards-profile/commit/9cfbfd7f9a5b80d16d2b4221b732e6db9de157c2))
+* **profile:** give bot pushes and PRs the Avunu CI App's token through ci.github-app ([#15](https://github.com/Avunu/frappe-standards-profile/issues/15)) ([81502a7](https://github.com/Avunu/frappe-standards-profile/commit/81502a709190b23007a5431692e3d40f3f68922a))
+
 ## 1.0.0 (2026-10-29)
 
 
