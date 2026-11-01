@@ -9,7 +9,7 @@
   # It pins the release named by profile.toml's `requires-frappe-nix` lower bound, and the
   # validate workflow's `latest` job covers the newest release the range allows.
   inputs = {
-    frappe-nix.url = "github:Avunu/frappe-nix/v2.1.0";
+    frappe-nix.url = "github:Avunu/frappe-nix/v1.4.0";
     nixpkgs.follows = "frappe-nix/nixpkgs";
   };
 
