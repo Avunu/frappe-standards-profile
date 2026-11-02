@@ -235,6 +235,8 @@
         "nix": true,
         "gitsubmodule": true
       },
+      "auto-merge-policy": "all",
+      "update-branches": true,
       "ignore": {}
     },
     "ci": {
@@ -297,7 +299,8 @@
     "screenshots": {
       "enable": true,
       "timezone": "America/New_York",
-      "locale": "en-US"
+      "locale": "en-US",
+      "change-threshold": 0.2
     },
     "demo": {
       "enable": true,
