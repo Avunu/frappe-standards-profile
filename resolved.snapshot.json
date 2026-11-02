@@ -235,9 +235,9 @@
         "nix": true,
         "gitsubmodule": true
       },
-      "ignore": {},
-      "auto-merge-policy": "decision-table",
-      "update-branches": false
+      "auto-merge-policy": "all",
+      "update-branches": true,
+      "ignore": {}
     },
     "ci": {
       "enable": true,
