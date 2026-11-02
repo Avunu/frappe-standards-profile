@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/Avunu/frappe-standards-profile/compare/v1.1.0...v1.2.0) (2026-11-02)
+
+
+### Features
+
+* **profile:** auto-merge every bot PR and keep bot PRs up to date with develop ([#17](https://github.com/Avunu/frappe-standards-profile/issues/17)) ([7ce746e](https://github.com/Avunu/frappe-standards-profile/commit/7ce746ef525e57309570b531f49f1c299b6d99ff))
+* **profile:** replace screenshots only when 20 % of their pixels differ ([#16](https://github.com/Avunu/frappe-standards-profile/issues/16)) ([41f2166](https://github.com/Avunu/frappe-standards-profile/commit/41f21660d2ea5f55d45a56497d513906dfa01611))
+
 ## [1.1.0](https://github.com/Avunu/frappe-standards-profile/compare/v1.0.0...v1.1.0) (2026-10-31)
 
 
