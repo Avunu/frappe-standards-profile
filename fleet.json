@@ -56,6 +56,19 @@
       "documentation": "https://docs.avunu.net/esign-webforms/"
     },
     {
+      "repo": "Avunu/espresso_sync",
+      "app": "espresso_sync",
+      "private": false,
+      "list": false,
+      "documentation": "https://docs.avunu.net/espresso-sync/"
+    },
+    {
+      "repo": "Avunu/flow",
+      "app": "flow",
+      "private": false,
+      "list": false
+    },
+    {
       "repo": "Avunu/ui_text_editor",
       "app": "frappe_editor",
       "target_app": "ui_text_editor",
@@ -80,6 +93,13 @@
       "documentation": "https://docs.avunu.net/mercury-banking-integration/"
     },
     {
+      "repo": "Avunu/messaging",
+      "app": "messaging",
+      "private": false,
+      "list": true,
+      "documentation": "https://docs.avunu.net/messaging/"
+    },
+    {
       "repo": "Avunu/postgrid_direct_mail",
       "app": "postgrid_integration",
       "target_app": "postgrid_direct_mail",
@@ -88,10 +108,10 @@
       "documentation": "https://docs.avunu.net/postgrid-direct-mail/"
     },
     {
-      "repo": "Avunu/timeclock",
+      "repo": "Avunu/employee_timeclock",
       "app": "timeclock",
       "target_app": "employee_timeclock",
-      "private": true,
+      "private": false,
       "list": true,
       "documentation": "https://docs.avunu.net/employee-timeclock/"
     }
