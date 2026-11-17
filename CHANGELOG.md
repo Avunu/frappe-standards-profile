@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/Avunu/frappe-standards-profile/compare/v1.2.0...v1.2.1) (2026-11-17)
+
+
+### Bug Fixes
+
+* **fleet:** list every frappe-nix consumer and fix the renamed timeclock repo ([#23](https://github.com/Avunu/frappe-standards-profile/issues/23)) ([2377744](https://github.com/Avunu/frappe-standards-profile/commit/2377744db32e93865992f596b9ffd3aa84833429))
+
 ## [1.2.0](https://github.com/Avunu/frappe-standards-profile/compare/v1.1.0...v1.2.0) (2026-11-02)
 
 
