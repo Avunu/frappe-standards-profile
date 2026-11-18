@@ -11,8 +11,13 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # The cooldown proposes the newest release that is already 7 days old, and does not
+    # compare it with the pin. Pinning flake.nix to a fresh frappe-nix therefore got a PR
+    # (#19) that moved it back from v2.1.0 to v1.4.0, the newest tag older than a week. The
+    # frappe-nix pin is our own toolkit, checked by `latest`, so it takes no cooldown.
     cooldown:
       default-days: 7
+      exclude: [frappe-nix]
     commit-message:
       prefix: chore(deps)
 
