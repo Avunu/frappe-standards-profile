@@ -176,7 +176,22 @@
       "test-correctness": true
     },
     "workflow-lint": {
-      "enable": true
+      "enable": true,
+      "release-tag-workflows": [
+        "Avunu/site-docs/.github/workflows/check-docs.yml",
+        "Avunu/frappe-nix/.github/workflows/app-deps.yml",
+        "Avunu/frappe-nix/.github/workflows/app-lint.yml",
+        "Avunu/frappe-nix/.github/workflows/app-marketplace.yml",
+        "Avunu/frappe-nix/.github/workflows/app-nightly.yml",
+        "Avunu/frappe-nix/.github/workflows/app-pr-policy.yml",
+        "Avunu/frappe-nix/.github/workflows/app-release.yml",
+        "Avunu/frappe-nix/.github/workflows/app-test.yml",
+        "Avunu/frappe-nix/.github/workflows/app-typecheck.yml",
+        "Avunu/gitops/.github/workflows/dependabot-auto-merge.yml",
+        "Avunu/gitops/.github/workflows/dependabot-update-branches.yml",
+        "Avunu/python-devops-nix/.github/workflows/dependabot-auto-merge.yml",
+        "Avunu/python-devops-nix/.github/workflows/dependabot-update-branches.yml"
+      ]
     },
     "shell-lint": {
       "enable": true

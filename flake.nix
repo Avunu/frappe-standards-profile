@@ -9,7 +9,9 @@
   # It pins the release named by profile.toml's `requires-frappe-nix` lower bound, and the
   # validate workflow's `latest` job covers the newest release the range allows.
   inputs = {
-    frappe-nix.url = "github:Avunu/frappe-nix/v2.9.2";
+    # TEMPORARY: frappe-nix PR #315's commit (adds workflow-lint.release-tag-workflows, which no release
+    # has yet). Re-pin to the release that ships it before this merges.
+    frappe-nix.url = "github:Avunu/frappe-nix/635c3940eb893467dd9ae5e79464b6b177458742";
     nixpkgs.follows = "frappe-nix/nixpkgs";
   };
 
